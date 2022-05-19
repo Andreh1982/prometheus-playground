@@ -1,0 +1,12 @@
+groups:
+  - name: default
+    rules:
+
+      - alert: "Alertsplat Load Balancer"
+        expr: probe_success{website_instance="alertsplat-23e6ba4274a1ff5e.elb.us-east-1.amazonaws.com:9090"} != 1
+        for: 1m
+        labels:
+          severity: "critical"
+        annotations:
+          summary: "Endpoint {{ $labels.instance }} down"
+          description: "{{ $labels.instance }} of job {{ $labels.job }} has been down for more than 1 minutes."

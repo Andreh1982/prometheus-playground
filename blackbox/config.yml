@@ -1,0 +1,25 @@
+modules:
+  http_2xx:
+    prober: http
+    timeout: 5s
+    http:
+      method: GET
+      #no_follow_redirects: true
+      preferred_ip_protocol: ip4
+      ip_protocol_fallback: false
+      tls_config:
+        insecure_skip_verify: false
+      valid_status_codes: [200]
+
+  http_post_2xx:
+    prober: http
+    timeout: 5s
+    http:
+      method: POST
+      #no_follow_redirects: true
+      preferred_ip_protocol: ip4
+      ip_protocol_fallback: false
+      tls_config:
+        insecure_skip_verify: false
+      valid_status_codes: [200]
+

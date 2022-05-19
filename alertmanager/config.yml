@@ -1,0 +1,12 @@
+route:
+  receiver: emailer
+
+receivers:
+- name: emailer
+  email_configs:
+  - to: andre.pereira@olist.com
+    from:  andre.pereira@olist.com
+    smarthost: smtp.gmail.com:587 
+    auth_username: andre.pereira@olist.com 
+    auth_identity: andre.pereira@olist.com
+    auth_password: 

@@ -1,0 +1,89 @@
+version: "2.1"
+volumes:
+    prometheus_data: {}
+    grafana_data: {}
+services:
+    prometheus:
+        image: prom/prometheus:latest
+        container_name: prometheus
+        hostname: prometheus
+        restart: always
+        command:
+            - '--config.file=/etc/prometheus/prometheus.yml'
+            - '--storage.tsdb.path=/prometheus'
+            - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+            - '--web.console.templates=/usr/share/prometheus/consoles'
+        volumes:
+            - ./prometheus/:/etc/prometheus/
+            - prometheus_data:/prometheus
+        ports:
+            - 9090:9090
+        networks: 
+            - monitoring
+
+    grafana:
+        image: grafana/grafana:latest
+        container_name: grafana
+        hostname: grafana
+        restart: always
+        environment:
+            - GF_USERS_ALLOW_SIGN_UP=false
+        volumes:
+            - ./grafana/datasource.yml:/etc/grafana/provisioning/datasources/datasource.yaml
+            - grafana_data:/var/lib/grafana
+        ports:
+            - 3000:3000
+        depends_on:
+            - prometheus
+        networks: 
+            - monitoring
+
+    blackbox-exporter:
+        image: prom/blackbox-exporter:latest
+        container_name: blackbox_exporter
+        volumes: 
+            - ./blackbox/config.yml:/etc/blackbox_exporter/config.yml
+        hostname: blackbox_exporter
+        restart: unless-stopped
+        ports:
+            - 9115:9115
+        extra_hosts:
+            - "ecatrom9909:172.22.0.1" #host and ip
+        depends_on:
+            - prometheus
+        networks: 
+            - monitoring
+
+    alertmanager:
+        image: prom/alertmanager:v0.12.0
+        ports:
+            - 9093:9093
+        volumes:
+            - ./alertmanager/:/etc/alertmanager/
+        restart: always
+        depends_on:
+            - prometheus
+        networks: 
+            - monitoring
+
+    kafka-lag-exporter:
+        ports:
+            - 8000:8000
+        hostname: kafka-exporter
+        build:
+            context: kafka-lag-exporter
+            dockerfile: Dockerfile
+        volumes:
+        - ./kafka-lag-exporter/conf/application.conf:/opt/docker/conf/application.conf
+        - ./kafka-lag-exporter/conf/logback.xml:/opt/docker/conf/logback.xml
+        environment:
+            KAFKA_PASS: 'xxx'
+            KAFKA_USER: 'xxx'
+
+        depends_on:
+            - prometheus
+        networks:
+            - monitoring
+
+networks: 
+    monitoring:
