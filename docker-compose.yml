@@ -2,6 +2,9 @@ version: "2.1"
 volumes:
     prometheus_data: {}
     grafana_data: {}
+networks: 
+    monitoring:
+    
 services:
     prometheus:
         image: prom/prometheus:latest
@@ -40,10 +43,10 @@ services:
 
     blackbox-exporter:
         image: prom/blackbox-exporter:latest
-        container_name: blackbox_exporter
+        container_name: blackbox-exporter
+        hostname: blackbox-exporter
         volumes: 
             - ./blackbox/config.yml:/etc/blackbox_exporter/config.yml
-        hostname: blackbox_exporter
         restart: unless-stopped
         ports:
             - 9115:9115
@@ -56,6 +59,8 @@ services:
 
     alertmanager:
         image: prom/alertmanager:v0.12.0
+        container_name: alertmanager
+        hostname: alertmanager
         ports:
             - 9093:9093
         volumes:
@@ -67,9 +72,10 @@ services:
             - monitoring
 
     kafka-lag-exporter:
+        container_name: kafka-lag-exporter
+        hostname: kafka-lag-exporter
         ports:
             - 8000:8000
-        hostname: kafka-exporter
         build:
             context: kafka-lag-exporter
             dockerfile: Dockerfile
@@ -85,5 +91,14 @@ services:
         networks:
             - monitoring
 
-networks: 
-    monitoring:
+    pushgateway:
+        image: prom/pushgateway:latest
+        container_name: pushgateway
+        hostname: pushgateway
+        ports:
+            - 9091:9091
+        restart: always
+        depends_on:
+            - prometheus
+        networks: 
+            - monitoring
