@@ -1,3 +1,0 @@
-# HELP Deploy que foi concluído com sucesso
-# TYPE tf_deploy_success counter
-tf_deploy_success 2

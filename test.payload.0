@@ -1,0 +1,4 @@
+# TYPE tf_sns_deploy counter
+tf_sns_deploy 0
+# TYPE tf_s3_deploy counter
+tf_s3_deploy 0

@@ -51,7 +51,7 @@ services:
         ports:
             - 9115:9115
         extra_hosts:
-            - "ecatrom9909:172.22.0.1" #host and ip
+            - "ecatrom9909:172.22.0.1"
         depends_on:
             - prometheus
         networks: 
