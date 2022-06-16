@@ -1,10 +1,2 @@
-# TYPE tf_s3_deploy counter
-tf_s3_deploy 1
 # TYPE tf_sqs_deploy counter
 tf_sqs_deploy 1
-# TYPE tf_sns_deploy counter
-tf_sns_deploy 1
-# TYPE tf_rds_deploy counter
-tf_rds_deploy 1
-# TYPE my_lab_gauge gauge
-my_lab_gauge 2

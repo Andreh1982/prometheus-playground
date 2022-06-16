@@ -102,3 +102,23 @@ services:
             - prometheus
         networks: 
             - monitoring
+
+    loki:
+        image: grafana/loki:2.5.0
+        container_name: loki
+        hostname: loki
+        ports:
+            - "3100:3100"
+        command: -config.file=/etc/loki/local-config.yaml
+        networks:
+            - monitoring
+
+    # promtail:
+    #     image: grafana/promtail:2.5.0
+    #     container_name: promtail
+    #     hostname: promtail
+    #     volumes:
+    #         - /var/log:/var/log
+    #     command: -config.file=/etc/promtail/config.yml
+    #     networks:
+    #         - monitoring
